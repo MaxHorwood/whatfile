@@ -12,26 +12,36 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	const thing = vscode.workspace.onDidChangeTextDocument((filepath) => {
 		// if enabled is not defined or false then don't do anything...
 		const isEnabled: boolean | undefined = vscode.workspace.getConfiguration().get("whatFile.enabled");
+		const fileLocation: string | undefined = vscode.workspace.getConfiguration().get("whatFile.fileLocation");
+
 		if (!isEnabled) {
 			return;
+		} else if (!fileLocation) {
+			vscode.window.showInformationMessage("No file location in settings: Set `whatFile.fileLocation`");
+			return;
 		}
+
+		// Get the file name in the settings
+		const splitFilePathConfig = fileLocation.split("\\");
+		const fileNameConfig = splitFilePathConfig[splitFilePathConfig.length-1];
 		// Get file name
 		const splitFilePath = filepath.document.fileName.split("\\");
 		const fileName = splitFilePath[splitFilePath.length-1];
+
+		// Fix bug where if the file (the one being written) is open
+		// in vscode it would set its self as it was detected as a modification
+		if (fileNameConfig === fileName) {
+			return;
+		}
+		
 		// If we're not equal to what was stored last time save name of the file.
 		if (fileName !== lastChangedFile) {
 			lastChangedFile = fileName;
-			const fileLocation: string | undefined = vscode.workspace.getConfiguration().get("whatFile.fileLocation");
-			if (fileLocation) {
-				fs.writeFile(fileLocation, lastChangedFile, (err) => {
-					if (err) {
-						console.log(fileLocation);
-						vscode.window.showInformationMessage(`Invalid file location: '${fileLocation}'`);
-					}
-				});
-			} else {
-				vscode.window.showInformationMessage("No file location...");
-			}
+			fs.writeFile(fileLocation, lastChangedFile, (err) => {
+				if (err) {
+					vscode.window.showInformationMessage(`Invalid file location: '${fileLocation}'`);
+				}
+			});
 		}
 	});
 
