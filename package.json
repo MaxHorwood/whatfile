@@ -2,7 +2,7 @@
 	"name": "whatfile",
 	"displayName": "WhatFile",
 	"description": "Writes the most recently edited file to a specified file.",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "MaxHorwood",
 	"repository": {
 		"type": "git",
@@ -13,7 +13,7 @@
 	},
 	"activationEvents": [
 		"*"
-	],	
+	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"configuration": [
