@@ -3,6 +3,11 @@
 	"displayName": "WhatFile",
 	"description": "Writes the most recently edited file to a specified file.",
 	"version": "0.0.1",
+	"publisher": "MaxHorwood",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MaxHorwood/whatfile.git"
+	},
 	"engines": {
 		"vscode": "^1.34.0"
 	},
